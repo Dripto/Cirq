@@ -68,15 +68,15 @@ from cirq.ops.common_gates import (
     ZPowGate,
 )
 
-# from cirq.ops.dripto import (
-#     OverX,
-#     OverY,
-#     OverZ,
-#     OverCNOT,
-#     OverCZ,
-#     OverXX,
-#     ZX,
-# )
+from cirq.ops.dripto import (
+    OverX,
+    OverY,
+    OverZ,
+    OverCNOT,
+    OverCZ,
+    OverXX,
+    ZX,
+)
 
 from cirq.ops.controlled_gate import (
     ControlledGate,)
