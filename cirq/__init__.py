@@ -154,6 +154,13 @@ from cirq.linalg import (
 )
 
 from cirq.ops import (
+    OverX,
+    OverY,
+    OverZ,
+    OverCNOT,
+    OverCZ,
+    OverXX,
+    ZX,
     amplitude_damp,
     AmplitudeDampingChannel,
     ArithmeticOperation,

@@ -72,6 +72,10 @@ from cirq.ops.dripto import (
     OverX,
     OverY,
     OverZ,
+    OverCNOT,
+    OverCZ,
+    OverXX,
+    ZX,
 )
 
 from cirq.ops.controlled_gate import (
