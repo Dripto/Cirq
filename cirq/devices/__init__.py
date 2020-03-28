@@ -31,4 +31,5 @@ from cirq.devices.noise_model import (
     NOISE_MODEL_LIKE,
     NoiseModel,
     ConstantQubitNoiseModel,
+    TwoQubitGateNoiseModel,
 )

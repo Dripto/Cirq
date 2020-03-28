@@ -259,3 +259,65 @@ document(
     A single qubit gate is a `NOISE_MODEL_LIKE`. It will be wrapped inside of a
     `cirq.ConstantQubitNoiseModel`.
     """)
+
+@value.value_equality
+class TwoQubitGateNoiseModel(NoiseModel):
+    """Applies noise to each qubit individually to all qubits involved in a two qubit gate.
+    """
+
+    def __init__(self, qubit_noise_gate: 'cirq.Gate'):
+        if qubit_noise_gate.num_qubits() != 1:
+            raise ValueError('noise.num_qubits() != 1')
+        self.qubit_noise_gate = qubit_noise_gate
+
+    def _value_equality_values_(self):
+        return self.qubit_noise_gate
+
+    def __repr__(self):
+        return f'cirq.TwoQubitGateNoiseModel({self.qubit_noise_gate!r})'
+
+    def noisy_moment(self, moment: 'cirq.Moment',
+                     system_qubits: Sequence['cirq.Qid']):
+        # Noise should not be appended to previously-added noise.
+        if self.is_virtual_moment(moment):
+            return moment
+
+        qbs = []
+
+        for op in moment.operations:
+            if len(op.qubits) == 2:
+                for qb in op.qubits:
+                    qbs.append(qb)
+
+        return [
+            moment,
+            ops.Moment([
+                # TODO: Replace with "VirtualTag" class instance.
+                self.qubit_noise_gate(q).with_tags(ops.VirtualTag())
+                for q in qbs
+            ])
+        ]
+
+    def _json_dict_(self):
+        return protocols.obj_to_dict_helper(self, ['qubit_noise_gate'])
+
+
+NO_NOISE: 'cirq.NoiseModel' = _NoNoiseModel()
+document(
+    NO_NOISE, """The trivial noise model with no effects.
+
+    This is the noise model used when a `NOISE_MODEL_LIKE` noise parameter is
+    set to `None`.
+    """)
+
+NOISE_MODEL_LIKE = Union[None, 'cirq.NoiseModel', 'cirq.SingleQubitGate']
+document(
+    NOISE_MODEL_LIKE,  # type: ignore
+    """A `cirq.NoiseModel` or a value that can be trivially converted into one.
+
+    `None` is a `NOISE_MODEL_LIKE`. It will be replaced by the `cirq.NO_NOISE`
+    noise model.
+
+    A single qubit gate is a `NOISE_MODEL_LIKE`. It will be wrapped inside of a
+    `cirq.ConstantQubitNoiseModel`.
+    """)
